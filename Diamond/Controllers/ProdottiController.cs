@@ -2,6 +2,7 @@
 using Diamond.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace Diamond.Controllers
 
         // GET: Prodotti
         [Route("Prodotti")]
-        public IActionResult Index(int page = 0)
+        public async Task<IActionResult> Index(string searchString, int page = 0)
         {
             var pageSize = 8;
             var totalPosts = _context.Prodotto.Count();
@@ -31,18 +32,23 @@ namespace Diamond.Controllers
             ViewBag.NextPage = nextPage;
             ViewBag.HasNextPage = nextPage < totalPages;
 
-            var prodotti =
-                _context.Prodotto
-                    .OrderBy(x => x.nome)
-                    .Skip(pageSize * page)
-                    .Take(pageSize)
-                    .ToArray();
+            var prodotti = from p in _context.Prodotto
+                           select p;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                prodotti = prodotti.Where(p => p.nome.Contains(searchString));
+            }
+
+            prodotti = prodotti.OrderBy(p => p.nome)
+                               .Skip(pageSize * page)
+                               .Take(pageSize);
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-                return PartialView(prodotti);
+                return PartialView(prodotti.ToArray());
 
             //            var prodotti = await _context.Prodotto.OrderBy(x => x.nome).Take(10).ToListAsync();
-            return View(prodotti);
+            return View(await prodotti.AsNoTracking().ToListAsync());
         }
 
         // GET: Prodotti/Details/5
