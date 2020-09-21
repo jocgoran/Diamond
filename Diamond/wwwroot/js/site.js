@@ -3,6 +3,10 @@
 
 // Write your JavaScript code.
 
+//$(document).ready(function () {
+//    alert("Hello world!");
+//});
+
 $(function () {
 
     $('#mainContent').on('click', '.pager a', function () {
