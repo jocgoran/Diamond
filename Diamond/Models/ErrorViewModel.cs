@@ -1,5 +1,3 @@
-using System;
-
 namespace Diamond.Models
 {
     public class ErrorViewModel

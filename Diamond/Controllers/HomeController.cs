@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Diamond.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Diamond.Models;
+using System.Diagnostics;
 
 namespace Diamond.Controllers
 {
@@ -18,8 +14,10 @@ namespace Diamond.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string name = "Goran")
         {
+
+            ViewData["Message"] = "Hello " + name;
             return View();
         }
 

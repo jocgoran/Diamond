@@ -2,7 +2,17 @@
     ViewData["Title"] = "Home Page";
 }
 
+@section Scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            alert("Hello world!");
+        });
+    </script>
+}
+
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>@DateTime.UtcNow</p>
+    <p>@ViewData["Message"]</p>
 </div>

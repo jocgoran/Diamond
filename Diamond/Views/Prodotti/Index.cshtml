@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Diamond.Models.Prodotto>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<p class="pager">
+    @if (ViewBag.HasPreviousPage)
+    {
+        <a class="prev" href="@Url.Action("Index", "Prodotti" , new { page = ViewBag.PreviousPage })">
+            &lt; Previous
+        </a>
+    }
+
+    @if (ViewBag.HasNextPage)
+    {
+        <a class="next" href="@Url.Action("Index", "Prodotti" , new { page = ViewBag.NextPage })">
+            Next &gt;
+        </a>
+    }
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.prezzo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.quantita)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var prodotto in Model)
+        {
+            @await Html.PartialAsync("_Prodotti", prodotto)
+        }
+    </tbody>
+</table>

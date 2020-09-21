@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Diamond.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Diamond
 {
@@ -24,12 +21,22 @@ namespace Diamond
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddDbContext<DiamondContext>(options =>
+                       options.UseSqlServer(Configuration.GetConnectionString("DiamondContext")));
+
+            services.AddTransient<FeatureToggles>(x => new FeatureToggles
+            {
+                DeveloperExceptions = Configuration.GetValue<bool>("FeatureToggles:DeveloperExceptions")
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, FeatureToggles features, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
+            // loggerFactory.AddConsole();
+
+            if (features.DeveloperExceptions)
             {
                 app.UseDeveloperExceptionPage();
             }
